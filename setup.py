@@ -27,7 +27,7 @@ setuptools.setup(
         "requests",
         "python-dateutil",
         "OutCache",
-        "dataclasses_json",
+        "dataclasses-json",
         "marshmallow"
     ]
 )
