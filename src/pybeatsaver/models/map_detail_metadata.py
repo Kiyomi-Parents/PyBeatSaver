@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from dataclasses_json import dataclass_json
 
-from src.pybeatsaver.models.fields import default
+from .fields import default
 
 
 @dataclass_json
