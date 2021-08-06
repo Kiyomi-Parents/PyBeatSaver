@@ -2,12 +2,14 @@ from dataclasses import dataclass
 
 from dataclasses_json import dataclass_json
 
+from src.pybeatsaver.models.fields import default
+
 
 @dataclass_json
 @dataclass
 class MapStats:
-    downloads: int
-    downvotes: int
-    plays: int
-    score: float
-    upvotes: int
+    downloads: int = default()
+    downvotes: int = default()
+    plays: int = default()
+    score: float = default()
+    upvotes: int = default()

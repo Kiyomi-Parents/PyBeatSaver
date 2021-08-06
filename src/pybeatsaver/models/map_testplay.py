@@ -1,30 +1,17 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 
-from dataclasses_json import dataclass_json, config
-from dateutil import parser
-from marshmallow import fields
+from dataclasses_json import dataclass_json
 
+from .fields import datetime_field, default
 from .user_detail import UserDetail
 
 
 @dataclass_json
 @dataclass
 class MapTestplay:
-    createdAt: datetime = field(
-        metadata=config(
-            encoder=datetime.isoformat,
-            decoder=parser.isoparse,
-            mm_field=fields.DateTime(format='iso')
-        )
-    )
-    feedback: str
-    feedbackAt: datetime = field(
-        metadata=config(
-            encoder=datetime.isoformat,
-            decoder=parser.isoparse,
-            mm_field=fields.DateTime(format='iso')
-        )
-    )
-    user: UserDetail
-    video: str
+    created_at: datetime = datetime_field("createdAt")
+    feedback: str = default()
+    feedback_at: datetime = datetime_field("feedbackAt")
+    user: UserDetail = default()
+    video: str = default()

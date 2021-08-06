@@ -1,34 +1,27 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional, List
 
-from dataclasses_json import dataclass_json, config
-from dateutil import parser
-from marshmallow import fields
+from dataclasses_json import dataclass_json
 
-from .enums.state import State
+from .fields import datetime_field, default
 from .map_difficulty import MapDifficulty
+from .enums.state import State
 from .map_testplay import MapTestplay
 
 
 @dataclass_json
 @dataclass
 class MapVersion:
-    coverURL: str
-    createdAt: datetime = field(
-        metadata=config(
-            encoder=datetime.isoformat,
-            decoder=parser.isoparse,
-            mm_field=fields.DateTime(format='iso')
-        )
-    )
-    diffs: List[MapDifficulty]
-    downloadURL: str
-    hash: str
-    key: str
-    previewURL: str
-    sageScore: int
-    state: State
-    testplayAt: Optional[datetime] = None
-    testplays: Optional[List[MapTestplay]] = None
-    feedback: Optional[str] = None
+    cover_url: str = default("coverURL")
+    created_at: datetime = datetime_field("createdAt")
+    diffs: List[MapDifficulty] = default()
+    download_url: str = default("downloadURL")
+    hash: str = default()
+    key: str = default()
+    preview_url: str = default("previewURL")
+    sage_score: int = default("sageScore")
+    state: State = default()
+    testplay_at: Optional[datetime] = datetime_field("testplayAt")
+    testplays: Optional[List[MapTestplay]] = default()
+    feedback: Optional[str] = default()
