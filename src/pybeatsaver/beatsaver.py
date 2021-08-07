@@ -11,7 +11,7 @@ from .models.map_detail import MapDetail
 
 class BeatSaver:
     TIMEOUT = 10
-    _url = "https://api.beatsaver.com/"
+    _url = "https://api.beatsaver.com"
 
     def __init__(self):
         self.log = logging.getLogger(__name__)
