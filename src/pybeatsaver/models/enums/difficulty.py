@@ -6,4 +6,4 @@ class Difficulty(Enum):
     NORMAL = "Normal"
     HARD = "Hard"
     EXPERT = "Expert"
-    EXPERTPLUS = "ExpertPlus"
+    EXPERT_PLUS = "ExpertPlus"
