@@ -6,7 +6,7 @@ from dataclasses_json import dataclass_json
 
 from .fields import datetime_field, default
 from .map_difficulty import MapDifficulty
-from .enums.state import State
+from .enum.state import State
 from .map_testplay import MapTestplay
 
 

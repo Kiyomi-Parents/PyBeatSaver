@@ -3,8 +3,8 @@ from typing import Optional
 
 from dataclasses_json import dataclass_json
 
-from .enums.characteristic import Characteristic
-from .enums.difficulty import Difficulty
+from .enum.characteristic import Characteristic
+from .enum.difficulty import Difficulty
 from .fields import default
 from .map_parity_summary import MapParitySummary
 

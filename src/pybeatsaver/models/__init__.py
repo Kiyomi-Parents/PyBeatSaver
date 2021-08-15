@@ -1,4 +1,4 @@
-from .enums import *
+from .enum import *
 
 from .auth_request import AuthRequest
 from .map_detail import MapDetail
