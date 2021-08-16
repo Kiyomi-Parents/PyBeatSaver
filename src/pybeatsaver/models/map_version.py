@@ -20,7 +20,7 @@ class MapVersion:
     hash: str = default()
     key: str = default()
     preview_url: str = default("previewURL")
-    sage_score: int = default("sageScore")
+    sage_score: Optional[int] = default("sageScore")
     state: State = default()
     testplay_at: Optional[datetime] = datetime_field("testplayAt")
     testplays: Optional[List[MapTestplay]] = default()
