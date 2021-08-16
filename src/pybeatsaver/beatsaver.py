@@ -1,11 +1,9 @@
 import logging
-from json.decoder import JSONDecodeError
 from typing import Dict
 
-import requests
 from outcache import CacheAsync
 
-from .common import Common
+from .httpClient import HttpClient
 from .models.map_detail import MapDetail
 
 
@@ -16,20 +14,29 @@ class BeatSaver:
     def __init__(self):
         self.log = logging.getLogger(__name__)
 
-    async def _process_url(self, url: str) -> Dict:
-        response = await Common.request(requests.get, url, timeout=self.TIMEOUT)
+        self._http = HttpClient()
 
-        try:
-            data = response.json()
-        except JSONDecodeError:
-            self.log.exception("JSONDecodeError, response: %r, response.text: %r", response, response.text)
-            data = {"error": "Failed to decode json from scoresaber. Somethings broken."}
+    async def __aenter__(self):
+        await self.start()
+        return self
 
-        return data
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
+
+    async def start(self):
+        await self._http.start()
+
+    async def close(self):
+        await self._http.close()
+
+    async def _process_url(self, method: str, url: str) -> Dict:
+        await self._http.start()
+
+        return await self._http.request(method, url, timeout=self.TIMEOUT)
 
     @CacheAsync(hours=24)
     async def _get_map_by_hash(self, song_hash: str):
-        return await self._process_url(f"{self._url}/maps/hash/{song_hash}")
+        return await self._process_url('GET', f"{self._url}/maps/hash/{song_hash}")
 
     async def get_map_by_hash(self, song_hash: str) -> MapDetail:
         map_info = await self._get_map_by_hash(song_hash)
@@ -38,7 +45,7 @@ class BeatSaver:
 
     @CacheAsync(hours=24)
     async def _get_map_by_key(self, song_key: str):
-        return await self._process_url(f"{self._url}/maps/beatsaver/{song_key}")
+        return await self._process_url('GET', f"{self._url}/maps/beatsaver/{song_key}")
 
     async def get_map_by_key(self, song_key: str) -> MapDetail:
         map_info = await self._get_map_by_key(song_key)

@@ -14,18 +14,22 @@ class TestBeatSaver(IsolatedAsyncioTestCase):
         self.beatsaver = BeatSaver()
 
     async def test_get_map_by_hash_valid(self):
-        map_detail = await self.beatsaver.get_map_by_hash(self._valid_map_hash)
-        self.assertEqual(map_detail.versions[0].hash, self._valid_map_hash)
+        async with self.beatsaver as beatsaver:
+            map_detail = await beatsaver.get_map_by_hash(self._valid_map_hash)
+            self.assertEqual(map_detail.versions[0].hash, self._valid_map_hash)
 
     async def test_get_map_by_hash_invalid(self):
-        with self.assertRaises(NotFoundException):
-            await self.beatsaver.get_map_by_hash(self._invalid_map_hash)
+        async with self.beatsaver as beatsaver:
+            with self.assertRaises(NotFoundException):
+                await beatsaver.get_map_by_hash(self._invalid_map_hash)
 
     async def test_get_map_by_key(self):
-        map_detail = await self.beatsaver.get_map_by_key(self._valid_map_key)
+        async with self.beatsaver as beatsaver:
+            map_detail = await beatsaver.get_map_by_key(self._valid_map_key)
 
-        self.assertEqual(map_detail.versions[0].key, self._valid_map_key)
+            self.assertEqual(map_detail.versions[0].key, self._valid_map_key)
 
     async def test_get_map_by_key_invalid(self):
-        with self.assertRaises(NotFoundException):
-            await self.beatsaver.get_map_by_key(self._invalid_map_key)
+        async with self.beatsaver as beatsaver:
+            with self.assertRaises(NotFoundException):
+                await beatsaver.get_map_by_key(self._invalid_map_key)
