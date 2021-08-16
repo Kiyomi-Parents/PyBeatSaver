@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="PyBeatSaver",
-    version="0.0.8",
+    version="0.0.9",
     author="LuCkEr-",
     author_email="lucker@lucker.xyz",
     description="Beat Saver API client",
