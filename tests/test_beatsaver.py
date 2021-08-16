@@ -1,3 +1,5 @@
+import asyncio
+import random
 from unittest import IsolatedAsyncioTestCase
 
 from src.pybeatsaver import NotFoundException
@@ -12,6 +14,19 @@ class TestBeatSaver(IsolatedAsyncioTestCase):
 
     def setUp(self):
         self.beatsaver = BeatSaver()
+
+    async def test_random_map_by_key(self):
+        async with self.beatsaver as beatsaver:
+            for index in range(5):
+                await asyncio.sleep(0.2)
+                random_key = hex(random.randint(1, int("1b501", 16)))[2:]
+
+                try:
+                    map_detail = await beatsaver.get_map_by_key(random_key)
+
+                    self.assertEqual(map_detail.versions[0].key, random_key)
+                except NotFoundException:
+                    pass
 
     async def test_get_map_by_hash_valid(self):
         async with self.beatsaver as beatsaver:
