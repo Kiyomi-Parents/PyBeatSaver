@@ -6,6 +6,9 @@ from typing import Optional
 from dataclasses_json import config
 from marshmallow import fields
 
+from .enum.characteristic import Characteristic
+from .enum.difficulty import Difficulty
+
 
 def datetime_from_iso_format(time):
     if time:
@@ -17,10 +20,10 @@ def datetime_from_iso_format(time):
 def datetime_field(json_field_name: Optional[str] = None) -> Field:
     if json_field_name is None:
         conf = config(
-                encoder=datetime.isoformat,
-                decoder=datetime_from_iso_format,
-                mm_field=fields.DateTime(format='iso')
-            )
+            encoder=datetime.isoformat,
+            decoder=datetime_from_iso_format,
+            mm_field=fields.DateTime(format='iso')
+        )
     else:
         conf = config(
             encoder=datetime.isoformat,
@@ -44,4 +47,53 @@ def default(json_field_name: Optional[str] = None) -> Field:
     return field(
         default=None,
         metadata=conf
+    )
+
+
+def characteristic_decoder(value: any) -> Characteristic:
+    if value == "360Degree":
+        return Characteristic.DEGREE_360
+    elif value == "90Degree":
+        return Characteristic.DEGREE_90
+
+    if Characteristic.has_value(value):
+        return Characteristic(value)
+
+    return Characteristic.UNKNOWN
+
+
+def characteristic_encoder(characteristic: Characteristic) -> str:
+    return characteristic.value
+
+
+def characteristic_field(json_field_name: Optional[str] = None) -> Field:
+    return field(
+        default=None,
+        metadata=config(
+            encoder=characteristic_encoder,
+            decoder=characteristic_decoder,
+            field_name=json_field_name
+        )
+    )
+
+
+def difficulty_decoder(value: any) -> Difficulty:
+    if Difficulty.has_value(value):
+        return Difficulty(value)
+
+    return Difficulty.UNKNOWN
+
+
+def difficulty_encoder(difficulty: Difficulty) -> int:
+    return difficulty.value
+
+
+def difficulty_field(json_field_name: Optional[str] = None) -> Field:
+    return field(
+        default=None,
+        metadata=config(
+            encoder=difficulty_encoder,
+            decoder=difficulty_decoder,
+            field_name=json_field_name
+        )
     )

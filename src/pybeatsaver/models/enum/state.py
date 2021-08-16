@@ -1,7 +1,7 @@
-from enum import Enum
+from .base_enum import BaseEnum
 
 
-class State(Enum):
+class State(BaseEnum):
     UPLOADED = "Uploaded"
     TESTPLAY = "Testplay"
     PUBLISHED = "Published"
