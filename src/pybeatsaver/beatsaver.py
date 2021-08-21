@@ -45,7 +45,7 @@ class BeatSaver:
 
     @CacheAsync(hours=24)
     async def _get_map_by_key(self, song_key: str):
-        return await self._process_url('GET', f"{self._url}/maps/beatsaver/{song_key}")
+        return await self._process_url('GET', f"{self._url}/maps/id/{song_key}")
 
     async def get_map_by_key(self, song_key: str) -> MapDetail:
         map_info = await self._get_map_by_key(song_key)
