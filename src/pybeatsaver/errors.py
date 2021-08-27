@@ -1,25 +1,14 @@
-class APIException(Exception):
-    def __init__(self, response, message=None):
-        self.response = response
+class BeatSaverException(Exception):
+    def __init__(self, status: int, url: str) -> None:
+        self.status = status
+        self.url = url
 
-        if message is not None:
-            self.message = message
-        else:
-            self.message = f"Got HTTP status code {response.status} for {response.url}"
-
-        super().__init__(self.message)
-
-    def __str__(self):
-        return self.message
+        super().__init__(f"Beat Saver returned {self.status} for {self.url}")
 
 
-class NotFoundException(APIException):
+class NotFoundException(BeatSaverException):
     pass
 
 
-class RateLimitedException(APIException):
-    pass
-
-
-class ServerErrorException(APIException):
+class ServerException(BeatSaverException):
     pass

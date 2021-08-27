@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import *
 
 from dataclasses_json import dataclass_json
 
@@ -12,20 +12,20 @@ from .map_parity_summary import MapParitySummary
 @dataclass_json
 @dataclass
 class MapDifficulty:
+    njs: float = default()
+    offset: float = default()
+    notes: int = default()
     bombs: int = default()
+    obstacles: int = default()
+    nps: float = default()
+    length: float = default()
     characteristic: Characteristic = characteristic_field()
-    chroma: bool = default()
-    cinema: bool = default()
     difficulty: Difficulty = difficulty_field()
     events: int = default()
-    length: float = default()
+    chroma: bool = default()
     me: bool = default()
     ne: bool = default()
-    njs: float = default()
-    notes: int = default()
-    nps: int = default()
-    obstacles: int = default()
-    offset: float = default()
-    parity_summary: MapParitySummary = default("paritySummary")
+    cinema: bool = default()
     seconds: float = default()
+    parity_summary: MapParitySummary = default("paritySummary")
     stars: Optional[float] = default()

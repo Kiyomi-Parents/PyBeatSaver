@@ -8,8 +8,8 @@ from .fields import default
 @dataclass_json
 @dataclass
 class MapStats:
-    downloads: int = default()
-    downvotes: int = default()
     plays: int = default()
-    score: float = default()
+    downloads: int = default()
     upvotes: int = default()
+    downvotes: int = default()
+    score: float = default()

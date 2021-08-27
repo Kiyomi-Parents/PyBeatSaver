@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
+from typing import *
 
 from dataclasses_json import dataclass_json
 
@@ -14,15 +14,18 @@ from .user_detail import UserDetail
 @dataclass_json
 @dataclass
 class MapDetail:
-    automapper: bool = default()
-    description: str = default()
     id: str = default()
-    metadata: MapDetailMetadata = default()
     name: str = default()
-    qualified: bool = default()
-    ranked: bool = default()
-    stats: MapStats = default()
-    uploaded: datetime = datetime_field()
+    description: str = default()
     uploader: UserDetail = default()
+    metadata: MapDetailMetadata = default()
+    stats: MapStats = default()
+    uploaded: Optional[datetime] = datetime_field()
+    automapper: bool = default()
+    ranked: bool = default()
+    qualified: bool = default()
     versions: List[MapVersion] = default()
     curator: Optional[str] = default()
+    created_at: datetime = datetime_field("createdAt")
+    updated_at: datetime = datetime_field("updatedAt")
+    last_published_at: Optional[datetime] = datetime_field("lastPublishedAt")

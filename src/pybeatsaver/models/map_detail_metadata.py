@@ -10,7 +10,7 @@ from .fields import default
 class MapDetailMetadata:
     bpm: float = default()
     duration: int = default()
-    level_author_name: str = default("levelAuthorName")
-    song_author_name: str = default("songAuthorName")
     song_name: str = default("songName")
     song_sub_name: str = default("songSubName")
+    song_author_name: str = default("songAuthorName")
+    level_author_name: str = default("levelAuthorName")

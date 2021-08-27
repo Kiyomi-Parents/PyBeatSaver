@@ -1,13 +1,12 @@
 from dateutil import parser
 from dataclasses import field, Field
 from datetime import datetime
-from typing import Optional
+from typing import *
 
 from dataclasses_json import config
 from marshmallow import fields
 
-from .enum.characteristic import Characteristic
-from .enum.difficulty import Difficulty
+from .enum import Characteristic, Difficulty, AccountType
 
 
 def datetime_from_iso_format(time):
@@ -94,6 +93,28 @@ def difficulty_field(json_field_name: Optional[str] = None) -> Field:
         metadata=config(
             encoder=difficulty_encoder,
             decoder=difficulty_decoder,
+            field_name=json_field_name
+        )
+    )
+
+
+def account_type_decoder(value: any) -> AccountType:
+    if AccountType.has_value(value):
+        return AccountType(value)
+
+    return AccountType.UNKNOWN
+
+
+def account_type_encoder(account_type: AccountType) -> int:
+    return account_type.value
+
+
+def account_type_field(json_field_name: Optional[str] = None) -> Field:
+    return field(
+        default=None,
+        metadata=config(
+            encoder=account_type_encoder,
+            decoder=account_type_decoder,
             field_name=json_field_name
         )
     )

@@ -1,7 +1,7 @@
 from .base_enum import BaseEnum
 
 
-class State(BaseEnum):
+class MapState(BaseEnum):
     UPLOADED = "Uploaded"
     TESTPLAY = "Testplay"
     PUBLISHED = "Published"

@@ -28,7 +28,7 @@ class TestBeatSaver(IsolatedAsyncioTestCase):
     _valid_username = "schwnk"
 
     async def asyncSetUp(self) -> None:
-        self.beatsaver = BeatSaverAPI()
+        self.beatsaver = BeatSaverAPI(test_mode=True)
 
         await self.beatsaver.start()
 
