@@ -52,7 +52,7 @@ class TestBeatSaver(IsolatedAsyncioTestCase):
         assert beatmap.versions[0].hash == self._valid_map_hashes[0]
 
     async def test_beatmaps_by_hashes(self):
-        async for beatmap in self.beatsaver.beatmaps_by_hashes(self._valid_map_hashes):
+        for beatmap in await self.beatsaver.beatmaps_by_hashes(self._valid_map_hashes):
             assert beatmap.versions[0].hash in self._valid_map_hashes
 
     async def test_user_beatmaps(self):

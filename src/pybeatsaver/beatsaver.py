@@ -18,10 +18,11 @@ class BeatSaver:
     _url = "https://api.beatsaver.com"
 
     def __init__(self, loop: Optional[AbstractEventLoop] = None, test_mode: bool = False):
-        self.log = logging.getLogger(__name__)
-        self._http_client = None
         self.loop = loop if loop is not None else asyncio.get_event_loop()
         self.test_mode = test_mode
+
+        self.log = logging.getLogger(__name__)
+        self._http_client = HttpClient(self.loop)
 
         if test_mode:
             self.faker = Faker()
@@ -29,13 +30,10 @@ class BeatSaver:
             self.faker.add_provider(BeatSaverProvider)
 
     async def start(self):
-        if self._http_client is None:
-            self._http_client = HttpClient(loop=self.loop)
+        await self._http_client.start()
 
     async def close(self):
-        if self._http_client is not None:
-            await self._http_client.close()
-            self._http_client = None
+        await self._http_client.close()
 
     async def __aenter__(self):
         await self.start()
@@ -53,9 +51,7 @@ class BeatSaver:
         if self.test_mode:
             return self.faker.map_detail(beatmap_key=beatmap_key)
 
-        data = await self._http_client.get(f"{self._url}/maps/id/{beatmap_key}")
-
-        return MapDetail.from_dict(data)
+        return await self._http_client.get(MapDetail, f"{self._url}/maps/id/{beatmap_key}")
 
     @CacheAsync(hours=1)
     async def beatmap_by_hash(self,
@@ -64,25 +60,26 @@ class BeatSaver:
         if self.test_mode:
             return self.faker.map_detail(beatmap_hash=beatmap_hash)
 
-        data = await self._http_client.get(f"{self._url}/maps/hash/{beatmap_hash}")
+        return await self._http_client.get(MapDetail, f"{self._url}/maps/hash/{beatmap_hash}")
 
-        return MapDetail.from_dict(data)
-
-    # @CacheAsync(hours=1)
+    @CacheAsync(hours=1)
     async def beatmaps_by_hashes(self,
         beatmap_hashes: List[str]
-    ) -> AsyncIterable[MapDetail]:
+    ) -> List[MapDetail]:
         if self.test_mode:
-            for beatmap_hash in beatmap_hashes:
-                yield self.faker.map_detail(beatmap_hash=beatmap_hash)
+            return self.faker.map_details_by_hash(beatmap_hashes)
 
         if len(beatmap_hashes) > 50:
             raise ValueError("You can only get 50 hashes at a time!")
 
-        data = await self._http_client.get(f"{self._url}/maps/hash/{','.join(beatmap_hashes)}")
+        data = await self._http_client.get_reg(f"{self._url}/maps/hash/{','.join(beatmap_hashes)}")
+
+        beatmaps = []
 
         for beatmap_hash in beatmap_hashes:
-            yield MapDetail.from_dict(data[beatmap_hash])
+            beatmaps.append(MapDetail.from_dict(data[beatmap_hash]))
+
+        return beatmaps
 
     @CacheAsync(minutes=5)
     async def user_beatmaps(self,
@@ -93,16 +90,10 @@ class BeatSaver:
             if page > 1:
                 raise BeatSaverException(404, "Running in test mode")
 
-            beatmaps = []
+            return self.faker.map_details(100, uploader_id=user_id)
 
-            for _ in range(50):
-                beatmaps.append(self.faker.map_detail(uploader_id=user_id))
-
-            return beatmaps
-
-        data = await self._http_client.get(f"{self._url}/maps/uploader/{user_id}/{page}")
-
-        return SearchResponse.from_dict(data).docs
+        search_response = await self._http_client.get(SearchResponse, f"{self._url}/maps/uploader/{user_id}/{page}")
+        return search_response.docs
 
     @CacheAsync(minutes=1)
     async def latest_beatmaps(self,
@@ -114,10 +105,7 @@ class BeatSaver:
         if self.test_mode:
             beatmaps = []
 
-            for _ in range(100):
-                beatmaps.append(self.faker.map_detail())
-
-            return beatmaps
+            return self.faker.map_details(100)
 
         query = f"{self._url}/maps/latest"
         params = []
@@ -137,9 +125,8 @@ class BeatSaver:
         if len(params) > 0:
             query += "?" + "&".join(params)
 
-        data = await self._http_client.get(query)
-
-        return SearchResponse.from_dict(data).docs
+        search_response = await self._http_client.get(SearchResponse, query)
+        return search_response.docs
 
     @CacheAsync(hours=24)
     async def beatmaps_ordered_by_plays(self,
@@ -149,16 +136,10 @@ class BeatSaver:
             if page > 1:
                 raise BeatSaverException(404, "Running in test mode")
 
-            beatmaps = []
+            return self.faker.map_details(100)
 
-            for _ in range(100):
-                beatmaps.append(self.faker.map_detail())
-
-            return beatmaps
-
-        data = await self._http_client.get(f"{self._url}/maps/plays/{page}")
-
-        return SearchResponse.from_dict(data).docs
+        search_response = await self._http_client.get(SearchResponse, f"{self._url}/maps/plays/{page}")
+        return search_response.docs
 
     # /users
     @CacheAsync(hours=24)
@@ -168,9 +149,7 @@ class BeatSaver:
         if self.test_mode:
             return self.faker.user_detail(user_id=user_id)
 
-        data = await self._http_client.get(f"{self._url}/users/id/{user_id}")
-
-        return UserDetail.from_dict(data)
+        return await self._http_client.get(UserDetail, f"{self._url}/users/id/{user_id}")
 
     @CacheAsync(hours=24)
     async def user_by_username(self,
@@ -179,9 +158,7 @@ class BeatSaver:
         if self.test_mode:
             return self.faker.user_detail(username=username)
 
-        data = await self._http_client.get(f"{self._url}/users/name/{username}")
-
-        return UserDetail.from_dict(data)
+        return await self._http_client.get(UserDetail, f"{self._url}/users/name/{username}")
 
     # TODO: Implement POST /users/verify
 
@@ -215,12 +192,8 @@ class BeatSaver:
                 raise BeatSaverException(404, "Running in test mode")
 
             logging.warning(f"search_beatmaps is returning random maps")
-            beatmaps = []
 
-            for _ in range(100):
-                beatmaps.append(self.faker.map_detail())
-
-            return beatmaps
+            return self.faker.map_details(100)
 
         query = f"{self._url}/search/text/{page}"
         params = []
@@ -284,9 +257,8 @@ class BeatSaver:
         if len(params) > 0:
             query += "?" + "&".join(params)
 
-        data = await self._http_client.get(query)
-
-        return SearchResponse.from_dict(data).docs
+        search_response = await self._http_client.get(SearchResponse, query)
+        return search_response.docs
 
     # /vote
 

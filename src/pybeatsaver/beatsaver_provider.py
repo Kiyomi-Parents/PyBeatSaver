@@ -21,6 +21,22 @@ class BeatSaverProvider(BaseProvider):
     def beatmap_hash(self) -> str:
         return self.generator.sha1(raw_output=False)
 
+    def map_details_by_hash(self, beatmap_hashes: List[str] = None):
+        map_details = []
+
+        for beatmap_hash in beatmap_hashes:
+            map_details.append(self.map_detail(beatmap_hash=beatmap_hash))
+
+        return map_details
+
+    def map_details(self, amount: int = None, *args, **kwargs) -> List[MapDetail]:
+        map_details = []
+
+        for _ in range(amount if amount is not None else self.random_int(0, 10)):
+            map_details.append(self.map_detail(*args, **kwargs))
+
+        return map_details
+
     def map_detail(self, beatmap_key: str = None, beatmap_hash: str = None, uploader_id: int = None) -> MapDetail:
         if beatmap_key is None:
             beatmap_key = self.beatmap_key()

@@ -1,5 +1,7 @@
 import asyncio
 import logging
+from asyncio import AbstractEventLoop
+from typing import Optional
 
 import aiohttp
 from aiohttp import ClientResponse, ClientResponseError
@@ -7,18 +9,35 @@ from aiohttp import ClientResponse, ClientResponseError
 from .errors import BeatSaverException, NotFoundException, ServerException
 
 
-class HttpClient(aiohttp.ClientSession):
+class HttpClient:
     RETRIES = 10
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(raise_for_status=True, *args, **kwargs)
+    def __init__(self, loop: Optional[AbstractEventLoop] = None):
+        self.loop = loop
+        self._aiohttp = None
+
+    async def start(self):
+        if self._aiohttp is None:
+            self._aiohttp = aiohttp.ClientSession(loop=self.loop, raise_for_status=True)
+
+    async def close(self):
+        if self._aiohttp is not None:
+            await self._aiohttp.close()
+            self._aiohttp = None
+
+    async def __aenter__(self):
+        await self.start()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
 
     async def _request(self, *args, **kwargs) -> ClientResponse:
         retries = 0
 
         while True:
             try:
-                response = await super()._request(*args, **kwargs)
+                response = await self._aiohttp.request(*args, **kwargs)
 
                 if response.status == 200:
                     return response
@@ -40,7 +59,12 @@ class HttpClient(aiohttp.ClientSession):
 
             retries += 1
 
-    async def get(self, url, *args, **kwargs):
+    async def get_reg(self, url, *args, **kwargs):
         response = await self._request('GET', url, *args, **kwargs)
         return await response.json()
+
+    async def get(self, type_, url, *args, **kwargs):
+        response = await self._request('GET', url, *args, **kwargs)
+        data = await response.json()
+        return type_.from_dict(data)
 

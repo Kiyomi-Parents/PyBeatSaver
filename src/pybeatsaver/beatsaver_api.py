@@ -1,9 +1,8 @@
 from typing import *
 
-from .errors import BeatSaverException
 from .beatsaver import BeatSaver
+from .errors import BeatSaverException
 from .models import *
-from .utils import chunks
 
 
 class BeatSaverAPI(BeatSaver):
