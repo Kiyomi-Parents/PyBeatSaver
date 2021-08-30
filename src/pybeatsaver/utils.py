@@ -2,7 +2,7 @@ import re
 from typing import *
 
 
-def chunks(values: List[any], chunk_size: int) -> Iterator[List[any]]:
+def split(values: List[any], chunk_size: int) -> Iterator[List[any]]:
     for index in range(0, len(values), chunk_size):
         yield values[index:index + chunk_size]
 
