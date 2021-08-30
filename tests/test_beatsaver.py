@@ -43,7 +43,7 @@ class TestBeatSaver(IsolatedAsyncioTestCase):
             try:
                 map_detail = await self.beatsaver.beatmap(random_key)
 
-                assert map_detail.versions[0].key == random_key
+                assert map_detail.id == random_key
             except NotFoundException:
                 pass
 
