@@ -93,6 +93,10 @@ class TestBeatSaver(IsolatedAsyncioTestCase):
         async for beatmap in self.beatsaver.beatmaps_by_keys(self._valid_map_keys):
             assert beatmap.id in self._valid_map_keys
 
+    async def test_beatmaps_by_hashes_all(self):
+        async for beatmaps in self.beatsaver.beatmaps_by_hashes_all(self._valid_map_hashes):
+            assert len(beatmaps) > 0
+
     async def test_beatmaps_by_uploader(self):
         async for beatmaps in self.beatsaver.beatmaps_by_user(self._valid_user):
             for beatmap in beatmaps:
