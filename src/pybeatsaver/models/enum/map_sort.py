@@ -1,4 +1,4 @@
-from src.pybeatsaver.models.enum.base_enum import BaseEnum
+from .base_enum import BaseEnum
 
 
 class MapSort(BaseEnum):
