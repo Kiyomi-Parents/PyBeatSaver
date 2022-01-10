@@ -4,4 +4,4 @@ setuptools~=57.0.0
 marshmallow~=3.13.0
 dataclasses-json~=0.5.6
 aiohttp~=3.7.4.post0
-Faker~=8.11.0
+Faker~=11.3.0
