@@ -77,7 +77,16 @@ class BeatSaver:
         beatmaps = []
 
         for beatmap_hash in beatmap_hashes:
-            beatmaps.append(MapDetail.from_dict(data[beatmap_hash]))
+            # If the hash is not found it will return a None.
+            if beatmap_hash in data and data[beatmap_hash] is not None:
+                map_detail = MapDetail.from_dict(data[beatmap_hash])
+
+                # Check if the hash produced a version with same hash.
+                # There are hashes that point to a different hashed version.
+                for map_version in map_detail.versions:
+                    if map_version.hash == beatmap_hash:
+                        beatmaps.append(map_detail)
+                        break
 
         return beatmaps
 
