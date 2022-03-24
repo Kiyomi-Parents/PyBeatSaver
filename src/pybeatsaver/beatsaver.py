@@ -60,7 +60,13 @@ class BeatSaver:
         if self.test_mode:
             return self.faker.map_detail(beatmap_hash=beatmap_hash)
 
-        return await self._http_client.get(MapDetail, f"{self._url}/maps/hash/{beatmap_hash}")
+        map_detail = await self._http_client.get(MapDetail, f"{self._url}/maps/hash/{beatmap_hash}")
+
+        for map_version in map_detail.versions:
+            if map_version.hash == beatmap_hash:
+                return map_detail
+
+        raise PyBeatSaverException(f"Found beatmap with wrong hash! {beatmap_hash} != {map_detail.versions[0].hash}")
 
     @CacheAsync(hours=1)
     async def beatmaps_by_hashes(self,
@@ -203,7 +209,6 @@ class BeatSaver:
 
         search_response = await self._http_client.get(SearchResponse, f"{self._url}/search/text/{page}", params)
         return search_response.docs
-
     # /vote
 
     # TODO: Implement GET /vote

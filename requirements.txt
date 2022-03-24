@@ -1,7 +1,9 @@
 OutCache~=0.0.4
 python-dateutil~=2.8.2
-setuptools~=60.5.0
-marshmallow~=3.14.1
+setuptools==60.10.0
+marshmallow==3.15.0
 dataclasses-json~=0.5.6
-aiohttp~=3.7.4.post0
-Faker~=11.3.0
+aiohttp==3.8.1
+Faker==13.3.3
+pytest==7.1.1
+pytest-asyncio~=0.18.2

@@ -42,12 +42,12 @@ class HttpClient:
 
         while True:
             try:
-                response = await self._aiohttp.request(params=params, *args, **kwargs)
+                response = await self._aiohttp.request(*args, params=params, **kwargs)
 
                 if response.status == 200:
                     return response
 
-                raise BeatSaverAPIException(response.status, str(response.real_url), params)
+                raise BeatSaverAPIException(response.status, str(response.real_url),params)
             except ClientResponseError as error:
                 status = error.status
                 real_url = str(error.request_info.real_url)
@@ -92,7 +92,12 @@ class HttpClient:
             return value.value
 
         if isinstance(value, list):
-            return ",".join(HttpClient._format_value(value))
+            items = []
+
+            for item in value:
+                items.append(HttpClient._format_value(item))
+
+            return ",".join(items)
 
         return value
 
