@@ -1,5 +1,5 @@
-from src.pybeatsaver.models.enum.human_enum import HumanEnum
-from src.pybeatsaver.models.enum.map_tag_type import EMapTagType
+from .human_enum import HumanEnum
+from .map_tag_type import EMapTagType
 
 
 class EMapTag(HumanEnum):
@@ -57,7 +57,7 @@ class EMapTag(HumanEnum):
     @staticmethod
     def deserialize(value: str):
         for class_value in EMapTag.get_class_values():
-            if class_value[2] is value:
+            if class_value[2] == value:
                 return EMapTag(class_value)
 
     @property
@@ -67,6 +67,7 @@ class EMapTag(HumanEnum):
     def get_type(self) -> EMapTagType:
         return self.value[0]
 
+    @property
     def human_readable(self) -> str:
         return self.value[1]
 
