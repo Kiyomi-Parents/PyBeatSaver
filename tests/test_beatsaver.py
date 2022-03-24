@@ -84,7 +84,7 @@ class TestBeatSaver(IsolatedAsyncioTestCase):
         assert user.name == self._valid_username
 
     async def test_search_beatmaps(self):
-        beatmaps = await self.beatsaver.search_beatmaps(search_question="ReeK - Weeaboo Spookfest [RANKED]")
+        beatmaps = await self.beatsaver.search_beatmaps(search_query="ReeK - Weeaboo Spookfest [RANKED]")
 
         for beatmap in beatmaps:
             assert beatmap.id is not None
@@ -104,7 +104,7 @@ class TestBeatSaver(IsolatedAsyncioTestCase):
 
     async def test_search_beatmaps_by_page(self):
         async for beatmaps in self.beatsaver.search_beatmaps_by_page(
-            search_question="ReeK - Weeaboo Spookfest [RANKED]"
+            search_query="ReeK - Weeaboo Spookfest [RANKED]"
         ):
             for beatmap in beatmaps:
                 assert beatmap.id is not None

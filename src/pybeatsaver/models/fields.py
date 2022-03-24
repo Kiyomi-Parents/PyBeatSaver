@@ -6,7 +6,7 @@ from typing import *
 from dataclasses_json import config
 from marshmallow import fields
 
-from .enum import ECharacteristic, EDifficulty, EAccountType
+from .enum.base_enum import BaseEnum
 
 
 def datetime_from_iso_format(time):
@@ -49,72 +49,44 @@ def default(json_field_name: Optional[str] = None) -> Field:
     )
 
 
-def characteristic_decoder(value: any) -> ECharacteristic:
-    if value == "360Degree":
-        return ECharacteristic.DEGREE_360
-    elif value == "90Degree":
-        return ECharacteristic.DEGREE_90
-
-    if ECharacteristic.has_value(value):
-        return ECharacteristic(value)
-
-    raise RuntimeError(f"Could not convert value {value} to ECharacteristic")
+T = TypeVar('T', bound=BaseEnum)
 
 
-def characteristic_encoder(characteristic: ECharacteristic) -> str:
-    return characteristic.value
+def get_enum_decoder(enum_type: Type[T]) -> Callable[[str], Optional[Union[T, List[T]]]]:
+    def enum_decoder(value: Optional[Union[str, List[str]]]) -> Optional[Union[T, List[T]]]:
+        if value is None:
+            return None
+
+        if isinstance(value, list):
+            items = []
+
+            for item in value:
+                if enum_type.has_value(item):
+                    items.append(enum_type.deserialize(item))
+
+            return items
+
+        if enum_type.has_value(value):
+            return enum_type.deserialize(value)
+
+        raise RuntimeError(f"Could not convert value {value} to {enum_type.__name__}")
+
+    return enum_decoder
 
 
-def characteristic_field(json_field_name: Optional[str] = None) -> Field:
+def get_enum_encoder() -> Callable[[T], str]:
+    def enum_decoder(value: T) -> str:
+        return value.serialize
+
+    return enum_decoder
+
+
+def enum_field(enum_type: Type[T], json_field_name: Optional[str] = None) -> field:
     return field(
         default=None,
         metadata=config(
-            encoder=characteristic_encoder,
-            decoder=characteristic_decoder,
-            field_name=json_field_name
-        )
-    )
-
-
-def difficulty_decoder(value: any) -> EDifficulty:
-    if EDifficulty.has_value(value):
-        return EDifficulty(value)
-
-    raise RuntimeError(f"Could not convert value {value} to EDifficulty")
-
-
-def difficulty_encoder(difficulty: EDifficulty) -> int:
-    return difficulty.value
-
-
-def difficulty_field(json_field_name: Optional[str] = None) -> Field:
-    return field(
-        default=None,
-        metadata=config(
-            encoder=difficulty_encoder,
-            decoder=difficulty_decoder,
-            field_name=json_field_name
-        )
-    )
-
-
-def account_type_decoder(value: any) -> EAccountType:
-    if EAccountType.has_value(value):
-        return EAccountType(value)
-
-    return EAccountType.UNKNOWN
-
-
-def account_type_encoder(account_type: EAccountType) -> int:
-    return account_type.value
-
-
-def account_type_field(json_field_name: Optional[str] = None) -> Field:
-    return field(
-        default=None,
-        metadata=config(
-            encoder=account_type_encoder,
-            decoder=account_type_decoder,
+            encoder=get_enum_encoder(),
+            decoder=get_enum_decoder(enum_type),
             field_name=json_field_name
         )
     )

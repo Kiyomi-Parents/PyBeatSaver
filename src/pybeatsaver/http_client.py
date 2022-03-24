@@ -86,7 +86,7 @@ class HttpClient:
             return "true" if value else "false"
 
         if isinstance(value, BaseEnum):
-            return value.api_request_value
+            return value.serialize
 
         if isinstance(value, Enum):
             return value.value
@@ -96,8 +96,12 @@ class HttpClient:
 
         return value
 
-    async def get_raw(self, url, *args, **kwargs):
-        response = await self._request('GET', url, *args, **kwargs)
+    async def get_raw(self, url, params: Dict[str, any] = None, *args, **kwargs):
+        if params is None:
+            params = {}
+
+        response = await self._request('GET', url, params=params, *args, **kwargs)
+
         return await response.json()
 
     async def get(self, type_: Type[T], url: str, params: Dict[str, any] = None, *args: Tuple[any], **kwargs: Dict[str, any]) -> T:
@@ -106,7 +110,7 @@ class HttpClient:
 
         params = self._format_params(params)
 
-        response = await self._request('GET', url, *args, params=params, **kwargs)
+        response = await self._request('GET', url, params=params, *args, **kwargs)
         data = await response.json()
 
         if not get_args(type_):
