@@ -3,6 +3,11 @@ import setuptools
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+# Requirements
+requirements = []
+with open("requirements.txt") as f:
+    requirements += f.read().splitlines()
+
 setuptools.setup(
     name="PyBeatSaver",
     version="0.1.5",
@@ -23,12 +28,5 @@ setuptools.setup(
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.8",
-    install_requires=[
-        "aiohttp",
-        "python-dateutil",
-        "OutCache",
-        "Faker",
-        "dataclasses-json",
-        "marshmallow"
-    ]
+    install_requires=requirements
 )
