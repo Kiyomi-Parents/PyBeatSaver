@@ -3,8 +3,8 @@ from typing import *
 
 from dataclasses_json import dataclass_json
 
-from .enum.characteristic import Characteristic
-from .enum.difficulty import Difficulty
+from .enum.characteristic import ECharacteristic
+from .enum.difficulty import EDifficulty
 from .fields import default, characteristic_field, difficulty_field
 from .map_parity_summary import MapParitySummary
 
@@ -19,8 +19,8 @@ class MapDifficulty:
     obstacles: int = default()
     nps: float = default()
     length: float = default()
-    characteristic: Characteristic = characteristic_field()
-    difficulty: Difficulty = difficulty_field()
+    characteristic: ECharacteristic = characteristic_field()
+    difficulty: EDifficulty = difficulty_field()
     events: int = default()
     chroma: bool = default()
     me: bool = default()

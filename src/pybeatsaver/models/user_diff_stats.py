@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
-from dataclasses_json import dataclass_json
+from dataclasses_json import dataclass_json, LetterCase
 
 from .fields import default
 
 
-@dataclass_json
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class UserDiffStats:
     total: int = default()
@@ -13,4 +13,4 @@ class UserDiffStats:
     normal: int = default()
     hard: int = default()
     expert: int = default()
-    expert_plus: int = default("expertPlus")
+    expert_plus: int = default()

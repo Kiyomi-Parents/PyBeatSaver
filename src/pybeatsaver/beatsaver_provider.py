@@ -2,8 +2,8 @@ from typing import *
 
 from faker.providers import BaseProvider
 
-from .models import MapDetailMetadata, MapStats, UserDetail, AccountType, UserStats, UserDiffStats, MapVersion, MapState, \
-    MapDifficulty, Characteristic, Difficulty, MapParitySummary
+from .models import MapDetailMetadata, MapStats, UserDetail, EAccountType, UserStats, UserDiffStats, MapVersion, EMapState, \
+    MapDifficulty, ECharacteristic, EDifficulty, MapParitySummary
 from .models import MapDetail
 
 
@@ -95,7 +95,7 @@ class BeatSaverProvider(BaseProvider):
         user_detail.testplay = self._value_or_none(self.generator.pybool())
         user_detail.avatar = self.generator.image_url(80, 80)
         user_detail.stats = self._value_or_none(self.user_stats())
-        user_detail.type = self.random_choices(list(AccountType), 1)
+        user_detail.type = self.random_choices(list(EAccountType), 1)
 
         return user_detail
 
@@ -151,7 +151,7 @@ class BeatSaverProvider(BaseProvider):
 
         map_version.hash = beatmap_hash
         map_version.key = self._value_or_none(beatmap_key)
-        map_version.state = self.random_choices(list(MapState), 1)
+        map_version.state = self.random_choices(list(EMapState), 1)
         map_version.created_at = self.generator.past_datetime()
         map_version.sage_score = self._value_or_none(self.random_int(-10, 10))
         map_version.diffs = self.map_difficulties()
@@ -182,8 +182,8 @@ class BeatSaverProvider(BaseProvider):
         map_difficulty.obstacles = self.random_int(0, 9999)
         map_difficulty.nps = float(self.numerify("%##.###"))
         map_difficulty.length = float(self.numerify("%##.###"))
-        map_difficulty.characteristic = self.random_choices(list(Characteristic), 1)
-        map_difficulty.difficulty = self.random_choices(list(Difficulty), 1)
+        map_difficulty.characteristic = self.random_choices(list(ECharacteristic), 1)
+        map_difficulty.difficulty = self.random_choices(list(EDifficulty), 1)
         map_difficulty.events = self.random_int(0, 9999)
         map_difficulty.chroma = self.generator.pybool()
         map_difficulty.me = self.generator.pybool()

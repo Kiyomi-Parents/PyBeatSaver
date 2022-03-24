@@ -6,7 +6,7 @@ from typing import *
 from dataclasses_json import config
 from marshmallow import fields
 
-from .enum import Characteristic, Difficulty, AccountType
+from .enum import ECharacteristic, EDifficulty, EAccountType
 
 
 def datetime_from_iso_format(time):
@@ -49,19 +49,19 @@ def default(json_field_name: Optional[str] = None) -> Field:
     )
 
 
-def characteristic_decoder(value: any) -> Characteristic:
+def characteristic_decoder(value: any) -> ECharacteristic:
     if value == "360Degree":
-        return Characteristic.DEGREE_360
+        return ECharacteristic.DEGREE_360
     elif value == "90Degree":
-        return Characteristic.DEGREE_90
+        return ECharacteristic.DEGREE_90
 
-    if Characteristic.has_value(value):
-        return Characteristic(value)
+    if ECharacteristic.has_value(value):
+        return ECharacteristic(value)
 
-    return Characteristic.UNKNOWN
+    raise RuntimeError(f"Could not convert value {value} to ECharacteristic")
 
 
-def characteristic_encoder(characteristic: Characteristic) -> str:
+def characteristic_encoder(characteristic: ECharacteristic) -> str:
     return characteristic.value
 
 
@@ -76,14 +76,14 @@ def characteristic_field(json_field_name: Optional[str] = None) -> Field:
     )
 
 
-def difficulty_decoder(value: any) -> Difficulty:
-    if Difficulty.has_value(value):
-        return Difficulty(value)
+def difficulty_decoder(value: any) -> EDifficulty:
+    if EDifficulty.has_value(value):
+        return EDifficulty(value)
 
-    return Difficulty.UNKNOWN
+    raise RuntimeError(f"Could not convert value {value} to EDifficulty")
 
 
-def difficulty_encoder(difficulty: Difficulty) -> int:
+def difficulty_encoder(difficulty: EDifficulty) -> int:
     return difficulty.value
 
 
@@ -98,14 +98,14 @@ def difficulty_field(json_field_name: Optional[str] = None) -> Field:
     )
 
 
-def account_type_decoder(value: any) -> AccountType:
-    if AccountType.has_value(value):
-        return AccountType(value)
+def account_type_decoder(value: any) -> EAccountType:
+    if EAccountType.has_value(value):
+        return EAccountType(value)
 
-    return AccountType.UNKNOWN
+    return EAccountType.UNKNOWN
 
 
-def account_type_encoder(account_type: AccountType) -> int:
+def account_type_encoder(account_type: EAccountType) -> int:
     return account_type.value
 
 

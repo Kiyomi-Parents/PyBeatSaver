@@ -1,12 +1,17 @@
 import asyncio
 import logging
 from asyncio import AbstractEventLoop
-from typing import Optional
+from datetime import datetime
+from enum import Enum
+from typing import Optional, TypeVar, Tuple, Dict, get_args, Type
 
 import aiohttp
 from aiohttp import ClientResponse, ClientResponseError
 
-from .errors import BeatSaverException, NotFoundException, ServerException
+from .errors import BeatSaverAPIException, NotFoundException, ServerException
+from .models.enum.base_enum import BaseEnum
+
+T = TypeVar('T')
 
 
 class HttpClient:
@@ -32,25 +37,28 @@ class HttpClient:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.close()
 
-    async def _request(self, *args, **kwargs) -> ClientResponse:
+    async def _request(self, *args, params: Dict[str, str], **kwargs) -> ClientResponse:
         retries = 0
 
         while True:
             try:
-                response = await self._aiohttp.request(*args, **kwargs)
+                response = await self._aiohttp.request(params=params, *args, **kwargs)
 
                 if response.status == 200:
                     return response
 
-                raise BeatSaverException(response.status, str(response.real_url))
+                raise BeatSaverAPIException(response.status, str(response.real_url), params)
             except ClientResponseError as error:
-                if error.status == 404:
-                    raise NotFoundException(error.status, str(error.request_info.real_url)) from error
-                elif error.status == 500:
-                    raise ServerException(error.status, str(error.request_info.real_url)) from error
+                status = error.status
+                real_url = str(error.request_info.real_url)
+
+                if status == 404:
+                    raise NotFoundException(status, real_url, params) from error
+                elif status == 500:
+                    raise ServerException(status, real_url, params) from error
                 else:
                     if retries > self.RETRIES:
-                        raise BeatSaverException(error.status, str(error.request_info.real_url)) from error
+                        raise BeatSaverAPIException(status, real_url, params) from error
 
             sleep = 2 ** retries
 
@@ -59,12 +67,52 @@ class HttpClient:
 
             retries += 1
 
-    async def get_reg(self, url, *args, **kwargs):
+    def _format_params(self, params: Dict[str, any]) -> Dict[str, str]:
+        for key, value in params.copy().items():
+            if value is None:
+                del params[key]
+                continue
+
+            params[key] = self._format_value(value)
+
+        return params
+
+    @staticmethod
+    def _format_value(value: any) -> str:
+        if isinstance(value, datetime):
+            return str(1000 * int(value.timestamp()))
+
+        if isinstance(value, bool):
+            return "true" if value else "false"
+
+        if isinstance(value, BaseEnum):
+            return value.api_request_value
+
+        if isinstance(value, Enum):
+            return value.value
+
+        if isinstance(value, list):
+            return ",".join(HttpClient._format_value(value))
+
+        return value
+
+    async def get_raw(self, url, *args, **kwargs):
         response = await self._request('GET', url, *args, **kwargs)
         return await response.json()
 
-    async def get(self, type_, url, *args, **kwargs):
-        response = await self._request('GET', url, *args, **kwargs)
-        data = await response.json()
-        return type_.from_dict(data)
+    async def get(self, type_: Type[T], url: str, params: Dict[str, any] = None, *args: Tuple[any], **kwargs: Dict[str, any]) -> T:
+        if params is None:
+            params = {}
 
+        params = self._format_params(params)
+
+        response = await self._request('GET', url, *args, params=params, **kwargs)
+        data = await response.json()
+
+        if not get_args(type_):
+            if isinstance(data, int):
+                return data
+
+            return type_.from_dict(data)
+
+        return get_args(type_)[0].schema().load(data, many=True)

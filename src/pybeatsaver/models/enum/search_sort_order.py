@@ -1,7 +1,8 @@
 from .base_enum import BaseEnum
 
 
-class SearchSortOrder(BaseEnum):
+class ESearchSortOrder(BaseEnum):
     LATEST = "Latest"
     RELEVANCE = "Relevance"
-    RATING = "Rating"
+    RATING = "Rating",
+    CURATED = "Curated"

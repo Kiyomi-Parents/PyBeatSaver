@@ -2,16 +2,17 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import *
 
-from dataclasses_json import dataclass_json
+from dataclasses_json import dataclass_json, LetterCase
 
 from .fields import default, datetime_field
 from .map_detail_metadata import MapDetailMetadata
 from .map_stats import MapStats
 from .map_version import MapVersion
 from .user_detail import UserDetail
+from .enum import EMapTag
 
 
-@dataclass_json
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class MapDetail:
     id: str = default()
@@ -20,12 +21,15 @@ class MapDetail:
     uploader: UserDetail = default()
     metadata: MapDetailMetadata = default()
     stats: MapStats = default()
-    uploaded: Optional[datetime] = datetime_field()
     automapper: bool = default()
     ranked: bool = default()
     qualified: bool = default()
     versions: List[MapVersion] = default()
-    curator: Optional[str] = default()
-    created_at: datetime = datetime_field("createdAt")
-    updated_at: datetime = datetime_field("updatedAt")
-    last_published_at: Optional[datetime] = datetime_field("lastPublishedAt")
+    curator: Optional[UserDetail] = default()
+    tags: List[EMapTag] = default()
+    created_at: datetime = datetime_field()
+    curated_at: datetime = datetime_field()
+    updated_at: datetime = datetime_field()
+    deleted_at: datetime = datetime_field()
+    uploaded: Optional[datetime] = datetime_field()
+    last_published_at: Optional[datetime] = datetime_field()

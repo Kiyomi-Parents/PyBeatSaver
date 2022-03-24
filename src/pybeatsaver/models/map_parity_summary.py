@@ -9,6 +9,6 @@ from .fields import default
 @dataclass
 class MapParitySummary:
     errors: int = default()
-    resets: int = default()
     warns: int = default()
+    resets: int = default()
 

@@ -1,21 +1,24 @@
 from dataclasses import dataclass
 from typing import *
 
-from dataclasses_json import dataclass_json
+from dataclasses_json import dataclass_json, LetterCase
 
-from .enum import AccountType
+from .enum import EAccountType
 from .fields import default, account_type_field
 from .user_stats import UserStats
 
 
-@dataclass_json
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class UserDetail:
     id: int = default()
     name: str = default()
-    unique_set: bool = default("uniqueSet")
+    unique_set: Optional[bool] = default()
     hash: Optional[str] = default()
     testplay: Optional[bool] = default()
     avatar: str = default()
     stats: Optional[UserStats] = default()
-    type: AccountType = account_type_field()
+    type: EAccountType = account_type_field()
+    email: Optional[str] = default()
+    upload_limit: Optional[int] = default()
+    curator: Optional[bool] = default()
