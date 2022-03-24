@@ -20,3 +20,6 @@ class BaseEnum(Enum):
     @property
     def serialize(self) -> str:
         return self.value[2]
+
+    def __str__(self) -> str:
+        return self.serialize
