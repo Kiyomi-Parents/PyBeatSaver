@@ -10,7 +10,7 @@ with open("requirements.txt") as f:
 
 setuptools.setup(
     name="PyBeatSaver",
-    version="0.1.5",
+    version="0.1.6",
     author="LuCkEr-",
     author_email="lucker@lucker.xyz",
     description="Beat Saver API client",
