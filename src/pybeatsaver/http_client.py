@@ -15,7 +15,7 @@ T = TypeVar('T')
 
 
 class HttpClient:
-    RETRIES = 10
+    MAX_TIMEOUT = 60
 
     def __init__(self, loop: Optional[AbstractEventLoop] = None):
         self.loop = loop
@@ -54,15 +54,16 @@ class HttpClient:
 
                 if status == 404:
                     raise NotFoundException(status, real_url, params) from error
-                elif status == 500:
+
+                if status == 500:
                     raise ServerException(status, real_url, params) from error
-                else:
-                    if retries > self.RETRIES:
-                        raise BeatSaverAPIException(status, real_url, params) from error
 
-            sleep = 2 ** retries
+            sleep = 10 * retries
 
-            logging.warning(f"[{retries}/{self.RETRIES}] Rate limited! Waiting {sleep} seconds...")
+            if sleep > self.MAX_TIMEOUT:
+                sleep = 60
+
+            logging.warning(f"Request failed! Waiting {sleep} seconds...")
             await asyncio.sleep(sleep)
 
             retries += 1
