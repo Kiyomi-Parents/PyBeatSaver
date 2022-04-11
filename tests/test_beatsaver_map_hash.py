@@ -38,3 +38,8 @@ async def test_beatmaps_by_hashes_all(beatsaver: BeatSaverAPI):
     async for beatmaps in beatsaver.beatmaps_by_hashes_all(valid_map_hashes):
         assert len(beatmaps) == len(valid_map_hashes)
 
+
+async def test_beatmaps_by_hashes_all_single(beatsaver: BeatSaverAPI):
+    async for beatmaps in beatsaver.beatmaps_by_hashes_all([valid_map_hashes[0]]):
+        assert beatmaps[0].versions[0].hash == valid_map_hashes[0]
+

@@ -80,6 +80,10 @@ class BeatSaver:
 
         data = await self._http_client.get_raw(f"{self._url}/maps/hash/{','.join(beatmap_hashes)}")
 
+        # We got a single beatmap back
+        if data.get("id") is not None:
+            return [MapDetail.from_dict(data)]
+
         beatmaps = []
 
         for beatmap_hash in beatmap_hashes:
