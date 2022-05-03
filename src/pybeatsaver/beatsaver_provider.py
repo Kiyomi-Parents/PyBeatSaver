@@ -2,6 +2,7 @@ from typing import *
 
 from faker.providers import BaseProvider
 
+from .models.enum import EMapTag
 from .models import MapDetailMetadata, MapStats, UserDetail, EAccountType, UserStats, UserDiffStats, MapVersion, EMapState, \
     MapDifficulty, ECharacteristic, EDifficulty, MapParitySummary
 from .models import MapDetail
@@ -49,14 +50,17 @@ class BeatSaverProvider(BaseProvider):
         map_detail.uploader = self.user_detail(user_id=uploader_id)
         map_detail.metadata = self.map_detail_metadata()
         map_detail.stats = self.map_stats()
-        map_detail.uploaded = self._value_or_none(self.generator.past_datetime())
         map_detail.automapper = self.generator.pybool()
         map_detail.ranked = self.generator.pybool()
         map_detail.qualified = self.generator.pybool()
         map_detail.versions = self.map_versions(beatmap_key, beatmap_hash)
         map_detail.curator = self._value_or_none(self.generator.user_name())
+        map_detail.tags = self._value_or_none(self.random_choices(list(EMapTag), 5))
         map_detail.created_at = self.generator.past_datetime()
+        map_detail.curated_at = self._value_or_none(self.generator.past_datetime())
         map_detail.updated_at = self.generator.past_datetime()
+        map_detail.deleted_at = self._value_or_none(self.generator.past_datetime())
+        map_detail.uploaded = self._value_or_none(self.generator.past_datetime())
         map_detail.last_published_at = self._value_or_none(self.generator.past_datetime())
 
         return map_detail
@@ -135,7 +139,7 @@ class BeatSaverProvider(BaseProvider):
     def map_versions(self, beatmap_key: str = None, beatmap_hash: str = None, amount: int = None) -> List[MapVersion]:
         map_versions = []
 
-        for index in range(amount if amount is not None else self.random_int(0, 10)):
+        for index in range(amount if amount is not None else self.random_int(1, 10)):
             map_versions.append(self.map_version(beatmap_key, beatmap_hash))
 
         return map_versions
@@ -151,7 +155,7 @@ class BeatSaverProvider(BaseProvider):
 
         map_version.hash = beatmap_hash
         map_version.key = self._value_or_none(beatmap_key)
-        map_version.state = self.random_choices(list(EMapState), 1)
+        map_version.state = self.random_choices(list(EMapState), 1)[0]
         map_version.created_at = self.generator.past_datetime()
         map_version.sage_score = self._value_or_none(self.random_int(-10, 10))
         map_version.diffs = self.map_difficulties()
@@ -161,6 +165,7 @@ class BeatSaverProvider(BaseProvider):
         map_version.download_url = self.generator.uri()
         map_version.cover_url = self.generator.image_url(256, 265)
         map_version.preview_url = self.generator.uri()
+        map_version.scheduled_at = self._value_or_none(self.generator.date_time_this_year())
 
         return map_version
 
