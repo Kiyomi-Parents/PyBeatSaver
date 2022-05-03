@@ -1,4 +1,8 @@
+[![GitHub license](https://img.shields.io/github/license/Kiyomi-Parents/PyBeatSaver)](https://github.com/Kiyomi-Parents/PyBeatSaver/blob/master/LICENSE)
 [![PyPI version](https://badge.fury.io/py/PyBeatSaver.svg)](https://pypi.org/project/PyBeatSaver)
+[![codecov](https://codecov.io/gh/Kiyomi-Parents/PyBeatSaver/branch/master/graph/badge.svg?token=IUFZTBDVEE)](https://codecov.io/gh/Kiyomi-Parents/PyBeatSaver)
+[![PyPI supported Python versions](https://img.shields.io/pypi/pyversions/pybeatsaver.svg)](https://pypi.org/project/PyBeatSaver)
+[![PyPI downloads](https://img.shields.io/pypi/dm/pybeatsaver?color=blueviolet&logo=pypi)](https://pypi.org/project/PyBeatSaver)
 # PyBeatSaver
 Beat Saver API client
 
