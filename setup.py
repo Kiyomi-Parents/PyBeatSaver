@@ -8,12 +8,21 @@ requirements = []
 with open("requirements.txt", "r", encoding="utf-8") as f:
     requirements += f.read().splitlines()
 
+extras_require = {
+    'test': [
+        'coverage[toml]',
+        'pytest',
+        'pytest-asyncio',
+        'pytest-cov'
+    ]
+}
+
 setuptools.setup(
     name="PyBeatSaver",
     version="0.1.8",
     author="LuCkEr-",
     author_email="lucker@lucker.xyz",
-    description="Beat Saver API client",
+    description="Beat Saver API wrapper",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Kiyomi-Parents/PyBeatSaver",
@@ -28,5 +37,6 @@ setuptools.setup(
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.8",
-    install_requires=requirements
+    install_requires=requirements,
+    extras_require=extras_require,
 )
