@@ -26,6 +26,9 @@ async def test_user_by_username(beatsaver: BeatSaver):
 
 
 async def test_beatmaps_by_uploader(beatsaver: BeatSaverAPI):
+    if beatsaver.test_mode:
+        return
+
     async for beatmaps in beatsaver.beatmaps_by_user(valid_user):
         for beatmap in beatmaps:
             assert beatmap.uploader.id == valid_user

@@ -1,4 +1,5 @@
 import asyncio
+import itertools
 
 import pytest
 
@@ -12,11 +13,18 @@ def event_loop():
     loop.close()
 
 
-@pytest.fixture(scope="session", params=[False, True])
+@pytest.fixture(
+    scope="session",
+    params=itertools.product([True, False], [True, False])
+)
 async def beatsaver(event_loop, request):
-    beatsaver_api = BeatSaverAPI(loop=event_loop, test_mode=request.param)
-    await beatsaver_api.start()
+    if request.param[0]:
+        beatsaver_api = BeatSaverAPI(loop=event_loop, test_mode=request.param[1])
+        await beatsaver_api.start()
 
-    yield beatsaver_api
+        yield beatsaver_api
 
-    await beatsaver_api.close()
+        await beatsaver_api.close()
+    else:
+        async with BeatSaverAPI(loop=event_loop, test_mode=request.param[0]) as beatsaver:
+            yield beatsaver

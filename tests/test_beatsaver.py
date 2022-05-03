@@ -1,4 +1,6 @@
-from src.pybeatsaver import BeatSaver, BeatSaverAPI
+import pytest
+
+from src.pybeatsaver import BeatSaver, BeatSaverAPI, PyBeatSaverException
 
 
 async def test_latest_beatmaps(beatsaver: BeatSaver):
@@ -23,6 +25,9 @@ async def test_search_beatmaps(beatsaver: BeatSaver):
 
 
 async def test_search_beatmaps_by_page(beatsaver: BeatSaverAPI):
+    if beatsaver.test_mode:
+        return
+
     async for beatmaps in beatsaver.search_beatmaps_by_page(
         search_query="ReeK - Weeaboo Spookfest [RANKED]"
     ):
