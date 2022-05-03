@@ -10,7 +10,7 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 
 extras_require = {
     'test': [
-        'coverage[toml]',
+        'coverage',
         'pytest',
         'pytest-asyncio',
         'pytest-cov'
