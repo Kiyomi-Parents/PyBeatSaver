@@ -1,4 +1,13 @@
+from typing import Optional
+
 import setuptools
+
+# Get version info
+__version__: Optional[str] = None
+exec(open('src/pyscoresaber/version.py').read())
+
+if __version__ is None:
+    raise RuntimeError("Failed to get version!")
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -19,7 +28,7 @@ extras_require = {
 
 setuptools.setup(
     name="PyBeatSaver",
-    version="0.1.10",
+    version=__version__,
     author="LuCkEr-",
     author_email="lucker@lucker.xyz",
     description="Beat Saver API wrapper",
