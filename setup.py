@@ -19,7 +19,7 @@ extras_require = {
 
 setuptools.setup(
     name="PyBeatSaver",
-    version="0.1.9",
+    version="0.1.10",
     author="LuCkEr-",
     author_email="lucker@lucker.xyz",
     description="Beat Saver API wrapper",
