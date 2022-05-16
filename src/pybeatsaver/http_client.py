@@ -10,12 +10,16 @@ from aiohttp import ClientResponse, ClientResponseError
 
 from .errors import BeatSaverAPIException, NotFoundException, ServerException
 from .models.enum.base_enum import BaseEnum
+from .version import __version__
 
 T = TypeVar('T')
 
 
 class HttpClient:
     MAX_TIMEOUT = 60
+    _headers = {
+        'User-Agent': f'PyBeatSaver/{__version__}'
+    }
 
     def __init__(self, loop: Optional[AbstractEventLoop] = None):
         self.loop = loop
@@ -23,7 +27,7 @@ class HttpClient:
 
     async def start(self):
         if self._aiohttp is None:
-            self._aiohttp = aiohttp.ClientSession(loop=self.loop, raise_for_status=True)
+            self._aiohttp = aiohttp.ClientSession(loop=self.loop, headers=self._headers, raise_for_status=True)
 
     async def close(self):
         if self._aiohttp is not None:
