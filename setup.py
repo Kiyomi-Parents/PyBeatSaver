@@ -4,7 +4,7 @@ import setuptools
 
 # Get version info
 __version__: Optional[str] = None
-exec(open('src/pyscoresaber/version.py').read())
+exec(open('src/pybeatsaver/version.py').read())
 
 if __version__ is None:
     raise RuntimeError("Failed to get version!")
