@@ -62,11 +62,15 @@ class BeatSaver:
 
         map_detail = await self._http_client.get(MapDetail, f"{self._url}/maps/hash/{beatmap_hash}")
 
+        # Check if the beatmap has been updated
         for map_version in map_detail.versions:
             if map_version.hash == beatmap_hash:
                 return map_detail
 
-        raise PyBeatSaverException(f"Found beatmap with wrong hash! {beatmap_hash} != {map_detail.versions[0].hash}")
+        _logger.warning(f"This beatmap has been updated! Returning new version with new hash! {beatmap_hash} -> "
+                        f"{map_detail.versions[0].hash}")
+
+        return map_detail
 
     @CacheAsync(hours=1)
     async def beatmaps_by_hashes(self,

@@ -13,8 +13,9 @@ valid_map_hashes = [
     "028f3a05eac78a51cb7ed51897fbd1dc5280b7d9"
 ]
 
-funky_map_hashes = [
-    'de7b5e933dd79d06ddee3df71174019cbe9ebd45'  # Returns maps with hash b3574125c2c8d6e187d4b7c5d59b5bb625fd2217
+updated_map_hashes = [
+    'de7b5e933dd79d06ddee3df71174019cbe9ebd45',  # Returns map with hash b3574125c2c8d6e187d4b7c5d59b5bb625fd2217
+    'e5048cca03e1a41c25915246a02106095011f91d'  # Returns map with hash b3a1950f5974db1ccab5c09c500ab3cbb77980c0
 ]
 
 
@@ -24,11 +25,11 @@ async def test_beatmap_by_hash(beatsaver: BeatSaver, beatmap_hash: str):
     assert beatmap.versions[0].hash == beatmap_hash
 
 
-@pytest.mark.parametrize("beatmap_hash", funky_map_hashes)
+@pytest.mark.parametrize("beatmap_hash", updated_map_hashes)
 async def test_beatmap_by_hash_wrong(beatsaver: BeatSaver, beatmap_hash: str):
     if not beatsaver.test_mode:
-        with pytest.raises(PyBeatSaverException):
-            await beatsaver.beatmap_by_hash(beatmap_hash)
+        beatmap = await beatsaver.beatmap_by_hash(beatmap_hash)
+        assert beatmap.versions[0].hash != beatmap_hash
 
 
 async def test_beatmaps_by_hashes(beatsaver: BeatSaver):
