@@ -12,6 +12,8 @@ from .beatsaver_provider import BeatSaverProvider
 from .http_client import HttpClient
 from .models import MapDetail, EMapSort, ESearchAutoMapper, ESearchSortOrder, SearchResponse, UserDetail, EMapTag
 
+_logger = logging.getLogger(__name__)
+
 
 class BeatSaver:
     TIMEOUT = 10
@@ -25,6 +27,8 @@ class BeatSaver:
         self._http_client = HttpClient(self.loop)
 
         if test_mode:
+            _logger.info("Running in test mode")
+
             self.faker = Faker()
             Faker.seed(76561198283584459)
             self.faker.add_provider(BeatSaverProvider)

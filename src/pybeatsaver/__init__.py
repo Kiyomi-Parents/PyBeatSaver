@@ -7,5 +7,4 @@ from .errors import *
 from .models import *
 from .version import __version__
 
-handler = logging.StreamHandler()
-logging.getLogger("PyBeatSaver").addHandler(handler)
+logging.getLogger("pybeatsaver").addHandler(logging.NullHandler())

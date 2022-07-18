@@ -13,6 +13,7 @@ from .models.enum.base_enum import BaseEnum
 from .version import __version__
 
 T = TypeVar('T')
+_logger = logging.getLogger(__name__)
 
 
 class HttpClient:
@@ -64,7 +65,7 @@ class HttpClient:
             if sleep > self.MAX_TIMEOUT:
                 sleep = 60
 
-            logging.warning(f"Request failed! Waiting {sleep} seconds...")
+            _logger.warning(f"[{status}] Request failed! Waiting {sleep} seconds...")
             await asyncio.sleep(sleep)
 
             retries += 1
