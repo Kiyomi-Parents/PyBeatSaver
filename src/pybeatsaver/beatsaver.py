@@ -80,11 +80,11 @@ class BeatSaver:
     async def beatmaps_by_hashes(self,
         beatmap_hashes: List[str]
     ) -> List[MapDetail]:
-        if self.test_mode:
-            return self.faker.map_details_by_hash(beatmap_hashes)
-
         if len(beatmap_hashes) > 50:
             raise PyBeatSaverException("You can only get 50 hashes at a time!")
+
+        if self.test_mode:
+            return self.faker.map_details_by_hash(beatmap_hashes)
 
         data = await self._http_client.get_raw(f"{self._url}/maps/hash/{','.join(beatmap_hashes)}")
 
