@@ -37,6 +37,12 @@ async def test_beatmaps_by_hashes(beatsaver: BeatSaver):
         assert beatmap.versions[0].hash in valid_map_hashes
 
 
+async def test_beatmaps_by_hashes_overflow(beatsaver: BeatSaver):
+    with pytest.raises(PyBeatSaverException):
+        for beatmap in await beatsaver.beatmaps_by_hashes(valid_map_hashes * 10):
+            assert beatmap is not None
+
+
 async def test_beatmaps_by_hashes_all(beatsaver: BeatSaverAPI):
     async for beatmaps in beatsaver.beatmaps_by_hashes_all(valid_map_hashes):
         assert len(beatmaps) == len(valid_map_hashes)
