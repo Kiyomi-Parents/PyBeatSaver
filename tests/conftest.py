@@ -26,5 +26,5 @@ async def beatsaver(event_loop, request):
 
         await beatsaver_api.close()
     else:
-        async with BeatSaverAPI(loop=event_loop, test_mode=request.param[0]) as beatsaver:
+        async with BeatSaverAPI(loop=event_loop, test_mode=request.param[1]) as beatsaver:
             yield beatsaver
