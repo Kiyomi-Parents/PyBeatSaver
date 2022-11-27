@@ -1,0 +1,10 @@
+from .base_enum import BaseEnum
+
+
+class ESentiment(BaseEnum):
+    PENDING = "PENDING"
+    VERY_NEGATIVE = "VERY_NEGATIVE"
+    MOSTLY_NEGATIVE = "MOSTLY_NEGATIVE"
+    MIXED = "MIXED"
+    MOSTLY_POSITIVE = "MOSTLY_POSITIVE"
+    VERY_POSITIVE = "VERY_POSITIVE"
