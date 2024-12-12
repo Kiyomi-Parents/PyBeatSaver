@@ -4,8 +4,9 @@ from .base_enum import BaseEnum
 class ESearchSortOrder(BaseEnum):
     LATEST = "Latest"
     RELEVANCE = "Relevance"
-    RATING = "Rating",
+    RATING = "Rating"
     CURATED = "Curated"
+    RANDOM = "Random"
 
     @staticmethod
     def deserialize(value: str):
