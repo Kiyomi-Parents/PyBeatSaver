@@ -8,7 +8,7 @@ from .map_parity_summary import MapParitySummary
 from .map_stats import MapStats
 from .map_testplay import MapTestplay
 from .map_version import MapVersion
-from .search_response import SearchResponse
+from .search_response import SearchResponse, SearchInfo
 from .user_detail import UserDetail
 from .user_diff_stats import UserDiffStats
 from .user_stats import UserStats

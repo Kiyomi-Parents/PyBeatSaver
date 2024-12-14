@@ -10,7 +10,7 @@ from outcache import CacheAsync
 from .errors import PyBeatSaverException
 from .beatsaver_provider import BeatSaverProvider
 from .http_client import HttpClient
-from .models import MapDetail, EMapSort, ESearchAutoMapper, ESearchSortOrder, SearchResponse, UserDetail, EMapTag
+from .models import MapDetail, EMapSort, ESearchAutoMapper, ESearchSortOrder, SearchResponse, UserDetail, EMapTag, ELeaderboard
 
 _logger = logging.getLogger(__name__)
 
@@ -191,7 +191,8 @@ class BeatSaver:
         me: Optional[bool] = None,
         chroma: Optional[bool] = None,
         cinema: Optional[bool] = None,
-        ranked: Optional[bool] = None,
+        leaderboard: Optional[ELeaderboard] = ELeaderboard.ALL,
+        verified: Optional[bool] = None,
         full_spread: Optional[bool] = None,
         curated: Optional[bool] = None,
         auto_mapper: Optional[ESearchAutoMapper] = None,
@@ -213,10 +214,10 @@ class BeatSaver:
             "q": search_query, "maxBpm": max_bpm, "maxDuration": max_duration,
             "maxNps": max_nps, "maxRating": max_rating, "minBpm": min_bpm,
             "minDuration": min_duration, "minNps": min_nps, "minRating": min_rating,
-            "noodle": noodle, "me": me, "chroma": chroma, "cinema": cinema,
-            "ranked": ranked, "full_spread": full_spread, "automapper": auto_mapper,
-            "from": from_date, "to": to_date, "sortOrder": sort_order, "curated": curated,
-            "tags": tags
+            "noodle": noodle, "me": me, "chroma": chroma, "cinema": cinema, 
+            "leaderboard": leaderboard, "verified": verified, "full_spread": full_spread, 
+            "automapper": auto_mapper, "from": from_date, "to": to_date, 
+            "sortOrder": sort_order, "curated": curated, "tags": tags
         }
 
         search_response = await self._http_client.get(SearchResponse, f"{self._url}/search/text/{page}", params)
