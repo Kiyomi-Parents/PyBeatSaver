@@ -214,9 +214,9 @@ class BeatSaver:
             "q": search_query, "maxBpm": max_bpm, "maxDuration": max_duration,
             "maxNps": max_nps, "maxRating": max_rating, "minBpm": min_bpm,
             "minDuration": min_duration, "minNps": min_nps, "minRating": min_rating,
-            "noodle": noodle, "me": me, "chroma": chroma, "cinema": cinema, 
-            "leaderboard": leaderboard, "verified": verified, "full_spread": full_spread, 
-            "automapper": auto_mapper, "from": from_date, "to": to_date, 
+            "noodle": noodle, "me": me, "chroma": chroma, "cinema": cinema,
+            "leaderboard": leaderboard, "verified": verified, "full_spread": full_spread,
+            "automapper": auto_mapper, "from": from_date, "to": to_date,
             "sortOrder": sort_order, "curated": curated, "tags": tags
         }
 
