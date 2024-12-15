@@ -9,6 +9,7 @@ class ECharacteristic(HumanEnum):
     DEGREE_360 = ("_360Degree", "360 Degree")
     LIGHTSHOW = ("Lightshow", "Lightshow")
     LAWLESS = ("Lawless", "Lawless")
+    LEGACY = ("Legacy", "Legacy")
 
     @classmethod
     def has_value(cls, value: str) -> bool:
