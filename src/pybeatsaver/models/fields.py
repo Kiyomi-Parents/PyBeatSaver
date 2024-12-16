@@ -6,34 +6,28 @@ from typing import *
 from dataclasses_json import config
 from marshmallow import fields
 
+def datetime_encoder_iso(dt: Optional[datetime]) -> Optional[str]:
+    return dt.isoformat() if dt is not None else None
 
-
-def datetime_from_iso_format(time):
-    if time:
-        return parser.isoparse(time)
-
-    return None
-
+def datetime_decoder_iso(iso_string: Optional[str]) -> Optional[datetime]:
+    return parser.isoparse(iso_string) if iso_string is not None else None
 
 def datetime_field(json_field_name: Optional[str] = None) -> Field:
     if json_field_name is None:
         conf = config(
-            encoder=datetime.isoformat,
-            decoder=datetime_from_iso_format,
+            encoder=datetime_encoder_iso,
+            decoder=datetime_decoder_iso,
             mm_field=fields.DateTime(format='iso')
         )
     else:
         conf = config(
-            encoder=datetime.isoformat,
-            decoder=datetime_from_iso_format,
+            encoder=datetime_encoder_iso,
+            decoder=datetime_decoder_iso,
             mm_field=fields.DateTime(format='iso'),
             field_name=json_field_name,
         )
 
-    return field(
-        default=None,
-        metadata=conf
-    )
+    return field(default=None, metadata=conf)
 
 
 def default(json_field_name: Optional[str] = None) -> Field:
