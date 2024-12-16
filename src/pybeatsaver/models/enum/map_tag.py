@@ -50,27 +50,13 @@ class EMapTag(HumanEnum):
     POP = (EMapTagType.GENRE, "Pop", "pop")
     ELECTRONIC = (EMapTagType.GENRE, "Electronic", "electronic")
 
-    @classmethod
-    def has_value(cls, value: str) -> bool:
-        return value in [class_value[2] for class_value in cls.get_class_values()]
-
-    @staticmethod
-    def deserialize(value: str):
-        for class_value in EMapTag.get_class_values():
-            if class_value[2] == value:
-                return EMapTag(class_value)
-
+    def __new__(cls, tag_type: EMapTagType, human_readable: str, value: str):
+        obj = object.__new__(cls)
+        obj._tag_type = tag_type
+        obj._human_readable = human_readable
+        obj._value_ = value
+        return obj
+    
     @property
-    def serialize(self) -> str:
-        return self.get_slug()
-
-    def get_type(self) -> EMapTagType:
-        return self.value[0]
-
-    @property
-    def human_readable(self) -> str:
-        return self.value[1]
-
-    def get_slug(self) -> str:
-        return self.value[2]
-
+    def tag_type(self) -> EMapTagType:
+        return self._tag_type

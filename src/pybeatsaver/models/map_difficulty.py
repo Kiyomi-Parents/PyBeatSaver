@@ -5,7 +5,7 @@ from dataclasses_json import dataclass_json
 
 from .enum.characteristic import ECharacteristic
 from .enum.difficulty import EDifficulty
-from .fields import default, enum_field
+from .fields import default
 from .map_parity_summary import MapParitySummary
 
 
@@ -19,8 +19,8 @@ class MapDifficulty:
     obstacles: int = default()
     nps: float = default()
     length: float = default()
-    characteristic: ECharacteristic = enum_field(ECharacteristic)
-    difficulty: EDifficulty = enum_field(EDifficulty)
+    characteristic: ECharacteristic = default()
+    difficulty: EDifficulty = default()
     events: int = default()
     chroma: bool = default()
     me: bool = default()

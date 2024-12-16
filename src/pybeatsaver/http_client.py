@@ -9,7 +9,6 @@ import aiohttp
 from aiohttp import ClientResponse, ClientResponseError
 
 from .errors import BeatSaverAPIException, NotFoundException, ServerException
-from .models.enum.base_enum import BaseEnum
 from .version import __version__
 
 T = TypeVar('T')
@@ -87,9 +86,6 @@ class HttpClient:
 
         if isinstance(value, bool):
             return "true" if value else "false"
-
-        if isinstance(value, BaseEnum):
-            return value.serialize
 
         if isinstance(value, Enum):
             return value.value

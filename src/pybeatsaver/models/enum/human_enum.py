@@ -1,10 +1,9 @@
 from abc import abstractmethod
+from enum import Enum
 
-from .base_enum import BaseEnum
 
-
-class HumanEnum(BaseEnum):
+class HumanEnum(Enum):
     @property
     @abstractmethod
     def human_readable(self) -> str:
-        pass
+        return self._human_readable

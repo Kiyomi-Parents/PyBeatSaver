@@ -1,7 +1,7 @@
-from .base_enum import BaseEnum
+from enum import Enum
 
 
-class EMapState(BaseEnum):
+class EMapState(Enum):
     UPLOADED = "Uploaded"
     TESTPLAY = "Testplay"
     PUBLISHED = "Published"
