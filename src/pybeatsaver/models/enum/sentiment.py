@@ -1,7 +1,7 @@
-from .base_enum import BaseEnum
+from enum import Enum
 
 
-class ESentiment(BaseEnum):
+class ESentiment(Enum):
     PENDING = "PENDING"
     VERY_NEGATIVE = "VERY_NEGATIVE"
     MOSTLY_NEGATIVE = "MOSTLY_NEGATIVE"

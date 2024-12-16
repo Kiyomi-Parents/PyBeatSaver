@@ -4,7 +4,7 @@ from typing import *
 
 from dataclasses_json import dataclass_json, LetterCase
 
-from .fields import default, datetime_field, enum_field
+from .fields import default, datetime_field
 from .map_detail_metadata import MapDetailMetadata
 from .map_stats import MapStats
 from .map_version import MapVersion
@@ -26,7 +26,7 @@ class MapDetail:
     qualified: bool = default()
     versions: List[MapVersion] = default()
     curator: Optional[UserDetail] = default()
-    tags: Optional[List[EMapTag]] = enum_field(EMapTag)
+    tags: Optional[List[EMapTag]] = default()
     created_at: datetime = datetime_field()
     curated_at: Optional[datetime] = datetime_field()
     updated_at: datetime = datetime_field()

@@ -8,26 +8,13 @@ class EDifficulty(HumanEnum):
     EXPERT = (7, "Expert", "Expert")
     EXPERT_PLUS = (9, "Expert+", "ExpertPlus")
 
-    @classmethod
-    def has_value(cls, value: str) -> bool:
-        return value in [class_value[2] for class_value in EDifficulty.get_class_values()]
-
-    @staticmethod
-    def deserialize(value: str):
-        for class_value in EDifficulty.get_class_values():
-            if class_value[2] == value:
-                return EDifficulty(class_value)
+    def __new__(cls, difficulty_int: int, human_readable: str, value: str):
+        obj = object.__new__(cls)
+        obj._human_readable = human_readable
+        obj._difficulty_int = difficulty_int
+        obj._value_ = value
+        return obj
 
     @property
-    def serialize(self) -> str:
-        return self.get_slug()
-
-    def get_difficulty_int(self) -> int:
-        return self.value[0]
-
-    @property
-    def human_readable(self) -> str:
-        return self.value[1]
-
-    def get_slug(self) -> str:
-        return self.value[2]
+    def difficulty_int(self) -> int:
+        return self._difficulty_int

@@ -1,18 +1,9 @@
-from .base_enum import BaseEnum
+from enum import Enum
 
 
-class ESearchSortOrder(BaseEnum):
+class ESearchSortOrder(Enum):
     LATEST = "Latest"
     RELEVANCE = "Relevance"
     RATING = "Rating"
     CURATED = "Curated"
     RANDOM = "Random"
-
-    @staticmethod
-    def deserialize(value: str):
-        return ESearchSortOrder(value)
-
-    @property
-    def serialize(self) -> str:
-        return self.value
-

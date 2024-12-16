@@ -1,7 +1,7 @@
-from .base_enum import BaseEnum
+from enum import Enum
 
 
-class ESearchAutoMapper(BaseEnum):
+class ESearchAutoMapper(Enum):
     BOTH = True
     AI = False
     NO_AI = None

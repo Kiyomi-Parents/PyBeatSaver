@@ -4,7 +4,7 @@ from typing import *
 from dataclasses_json import dataclass_json, LetterCase
 
 from .enum import EAccountType
-from .fields import default, enum_field
+from .fields import default
 from .user_stats import UserStats
 
 
@@ -18,7 +18,7 @@ class UserDetail:
     testplay: Optional[bool] = default()
     avatar: str = default()
     stats: Optional[UserStats] = default()
-    type: EAccountType = enum_field(EAccountType)
+    type: EAccountType = default()
     email: Optional[str] = default()
     upload_limit: Optional[int] = default()
     curator: Optional[bool] = default()

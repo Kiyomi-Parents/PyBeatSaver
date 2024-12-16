@@ -1,7 +1,7 @@
-from .base_enum import BaseEnum
+from enum import Enum
 
 
-class EMapSort(BaseEnum):
+class EMapSort(Enum):
     FIRST_PUBLISHED = "FIRST_PUBLISHED"
     LAST_PUBLISHED = "LAST_PUBLISHED"
     UPDATED = "UPDATED"

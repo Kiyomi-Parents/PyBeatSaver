@@ -4,7 +4,7 @@ from typing import Optional
 from dataclasses_json import dataclass_json
 
 from .enum.sentiment import ESentiment
-from .fields import default, enum_field
+from .fields import default
 
 
 @dataclass_json
@@ -16,4 +16,4 @@ class MapStats:
     downvotes: int = default()
     score: float = default()
     reviews: Optional[int] = default()
-    sentiment: Optional[ESentiment] = enum_field(ESentiment)
+    sentiment: Optional[ESentiment] = default()

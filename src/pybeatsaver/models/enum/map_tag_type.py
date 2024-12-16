@@ -1,7 +1,7 @@
-from .base_enum import BaseEnum
+from enum import Enum
 
 
-class EMapTagType(BaseEnum):
+class EMapTagType(Enum):
     NONE = ""
     STYLE = "Style"
     GENRE = "Genre"
